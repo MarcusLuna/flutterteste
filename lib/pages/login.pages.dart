@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:gif/models/user_model.dart';
 import 'package:gif/pages/principal.dart';
 import 'package:scoped_model/scoped_model.dart';
-
 import 'cadastrar.pages.dart';
 
 class LoginPage extends StatefulWidget {
