@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gif/pages/login.pages.dart';
 import 'package:scoped_model/scoped_model.dart';
-
+import 'package:gif/api/api.dart';
+import 'package:http/http.dart' as http;
 import 'models/user_model.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget{
+
+
+class MyApp  extends StatelessWidget{
+
   @override
   Widget build(BuildContext context){
     return ScopedModel<UserModel>(
@@ -15,6 +19,7 @@ class MyApp extends StatelessWidget{
         title: "Login",
         theme: ThemeData(primarySwatch: Colors.blue),
         home: LoginPage(),
+
       ),
     );
   }

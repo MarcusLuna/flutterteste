@@ -1,62 +1,69 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:gif/api/api.dart';
-import 'package:gif/api/user.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  build(context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'My Http App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: principal(),
-    );
-  }
+void main() {
+  runApp(MaterialApp(
+    home: HomePage(),
+  ));
 }
 
-class principal extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  createState() => _principal();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _principal extends State {
-  var users = new List<User>();
+class _HomePageState extends State<HomePage> {
+  Map data;
+  List userData;
 
-  _getUsers() {
-    API.getUsers().then((response) {
-      setState(() {
-        Iterable list = json.decode(response.body);
-        users = list.map((model) => User.fromJson(model)).toList();
-      });
+  Future getData() async {
+    http.Response response =
+        await http.get("http://192.168.6.30:8086/api/5/ClienteSAP");
+    data = json.decode(response.body);
+    setState(() {
+      userData = data["extra"];
     });
   }
 
-  initState() {
+  @override
+  void initState() {
     super.initState();
-    _getUsers();
-  }
-
-  dispose() {
-    super.dispose();
+    getData();
   }
 
   @override
-  build(context) {
+  Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Cliente"),
-        ),
-        body: ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            return ListTile(title: Text(users[index].email),
-           );
-          },
-        ));
+      appBar: AppBar(
+        title: Text("Clientes"),
+        backgroundColor: Colors.blue,
+      ),
+      body: ListView.builder(
+        itemCount: userData == null ? 0 : userData.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      "${userData[index]["cardCode"]} ", // ${userData[index]["last_name"]}
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

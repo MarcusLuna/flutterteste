@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                             {//if (_FormKey.currentState.validate()) {}
                             //model.signIn();
                         Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => principal()))
+                        builder: (context) => HomePage()))
 
                             },
                         shape: new RoundedRectangleBorder(
