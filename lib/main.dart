@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gif/pages/login.pages.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:gif/api/api.dart';
 import 'package:http/http.dart' as http;
 import 'models/user_model.dart';
 
