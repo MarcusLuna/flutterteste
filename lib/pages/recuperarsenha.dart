@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 
-class cadastrologin extends StatefulWidget {
+class recuperar extends StatefulWidget {
   @override
-  _cadastrologinState createState() => _cadastrologinState();
+  _recuperarState createState() => _recuperarState();
 }
 
 final _FormKey = GlobalKey<FormState>();
 
-class _cadastrologinState extends State<cadastrologin> {
+class _recuperarState extends State<recuperar> {
   @override
   Widget build(BuildContext context) {
     var controller =
@@ -30,28 +30,12 @@ class _cadastrologinState extends State<cadastrologin> {
                   ),
                   TextFormField(
                     controller: controller,
-                    keyboardType: TextInputType.number,
-                    style: new TextStyle(color: Colors.white, fontSize: 20),
-                    decoration: InputDecoration(
-                        labelText: "CNPJ",
-                        labelStyle: TextStyle(color: Colors.black38,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20),
-                        icon: Icon(Icons.credit_card)),
-
-                    // ignore: missing_return
-                    validator: (text) {
-                      if (text.isEmpty || text.length < 14)
-                        return "CNPJ Inválido";
-                    },
-                  ),
-                  TextFormField(
-                    controller: controller,
                     keyboardType: TextInputType.emailAddress,
                     style: new TextStyle(color: Colors.white, fontSize: 20),
                     decoration: InputDecoration(
                         labelText: "E-MAIL",
-                        labelStyle: TextStyle(color: Colors.black38,
+                        labelStyle: TextStyle(
+                            color: Colors.black38,
                             fontWeight: FontWeight.w400,
                             fontSize: 20),
                         icon: Icon(Icons.alternate_email)),
@@ -73,7 +57,7 @@ class _cadastrologinState extends State<cadastrologin> {
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0)),
                       child: Text(
-                        "Cadastrar",
+                        "Recuperar",
                         style: TextStyle(color: Colors.blue),
                       ),
                       color: Colors.white,

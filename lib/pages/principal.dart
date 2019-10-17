@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gif/api/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+
+import 'detalhes.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -20,7 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   Future getData() async {
     http.Response response =
-        await http.get("http://192.168.6.30:8086/api/5/ClienteSAP");
+    await http.get("http://192.168.6.30:8086/api/5/ClienteSAP");
     data = json.decode(response.body);
     setState(() {
       userData = data["extra"];
@@ -33,36 +36,76 @@ class _HomePageState extends State<HomePage> {
     getData();
   }
 
+  Icon cusIcon = Icon(Icons.search);
+  Widget cusSearchBar = Text('Clientes');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Clientes"),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              setState(() {
+                if (this.cusIcon.icon == Icons.search) {
+                  this.cusIcon = Icon(Icons.cancel);
+                  this.cusSearchBar = TextField(
+                    textInputAction: TextInputAction.go,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Procurar",
+                    ),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+
+                  );
+                }
+                else {
+                  this.cusIcon = Icon(Icons.search);
+                  this.cusSearchBar = Text('Clientes');
+                }
+              });
+            },
+            icon: cusIcon,
+          )
+        ],
+
+        title: cusSearchBar,
         backgroundColor: Colors.blue,
       ),
       body: ListView.builder(
         itemCount: userData == null ? 0 : userData.length,
         itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      "${userData[index]["cardCode"]} ", // ${userData[index]["last_name"]}
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w700,
+          return GestureDetector(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        "${userData[index]["cardCode"]} ",
+                        // ${userData[index]["last_name"]}
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailPage(userData[index])));
+            },
           );
         },
+
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:gif/models/user_model.dart';
 import 'package:gif/pages/principal.dart';
+import 'package:gif/pages/recuperarsenha.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'cadastrar.pages.dart';
 
@@ -29,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
             return Form(
               key: _FormKey,
               child: SingleChildScrollView(
+                padding: new EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -42,22 +44,26 @@ class _LoginPageState extends State<LoginPage> {
                       style: new TextStyle(color: Colors.white, fontSize: 20),
                       decoration: InputDecoration(
                           labelText: "CNPJ",
-                          labelStyle: TextStyle(color: Colors.white),
-                          icon: Icon(Icons.credit_card)),
+                          labelStyle: TextStyle(color: Colors.black38,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20),
+
+                          icon: Icon(Icons.person)),
                       // ignore: missing_return
                       validator: (text) {
                         if (text.isEmpty || text.length < 14)
                           return "CNPJ Inválido";
                       },
                     ),
-                    Divider(),
+
                     TextFormField(
                       obscureText: true,
                       keyboardType: TextInputType.text,
                       style: new TextStyle(color: Colors.white, fontSize: 20),
                       decoration: InputDecoration(
                           labelText: "Senha",
-                          labelStyle: TextStyle(color: Colors.white),
+                          labelStyle: TextStyle(color: Colors.black38,
+                              fontWeight: FontWeight.w400),
                           icon: Icon(Icons.lock_outline)),
                       // ignore: missing_return
                       validator: (text) {
@@ -66,28 +72,29 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     FlatButton(
-                      padding: const EdgeInsets.only(left: 250.0),
+                      padding: const EdgeInsets.only(left: 240.0),
                       child: Text(
-                        "Esqueci minha senha",
+                        "Recuperar senha",
                         style: TextStyle(
-                          fontSize: 15.0,
+                          fontSize: 10.0,
                         ),
                       ),
                       textColor: Colors.white,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => recuperar()));
+                      },
                     ),
-                    Divider(),
                     ButtonTheme(
                       height: 60.0,
                       minWidth: 360.0,
                       child: RaisedButton(
-                        onPressed: () =>
-                            {//if (_FormKey.currentState.validate()) {}
-                            //model.signIn();
-                        Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => HomePage()))
-
-                            },
+                        onPressed: () => {
+                          //if (_FormKey.currentState.validate()) {}
+                          //model.signIn();
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => HomePage()))
+                        },
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0)),
                         child: Text(
@@ -100,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                     FlatButton(
                       child: Text(
                         "Primeiro acesso ?",
-                        style: TextStyle(fontSize: 15.0),
+                        style: TextStyle(fontSize: 10.0),
                       ),
                       textColor: Colors.white,
                       onPressed: () {

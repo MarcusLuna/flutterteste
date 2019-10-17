@@ -15,6 +15,7 @@ class MyApp  extends StatelessWidget{
     return ScopedModel<UserModel>(
       model: UserModel(),
       child: MaterialApp (
+        debugShowCheckedModeBanner: false,
         title: "Login",
         theme: ThemeData(primarySwatch: Colors.blue),
         home: LoginPage(),
