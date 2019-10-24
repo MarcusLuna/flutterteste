@@ -5,6 +5,7 @@ import 'package:gif/pages/principal.dart';
 import 'package:gif/pages/recuperarsenha.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'cadastrar.pages.dart';
+import 'menu.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -44,10 +45,10 @@ class _LoginPageState extends State<LoginPage> {
                       style: new TextStyle(color: Colors.white, fontSize: 20),
                       decoration: InputDecoration(
                           labelText: "CNPJ",
-                          labelStyle: TextStyle(color: Colors.black38,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20),
-
+                          labelStyle: TextStyle(
+                              color: Colors.black38,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20),
                           icon: Icon(Icons.person)),
                       // ignore: missing_return
                       validator: (text) {
@@ -55,14 +56,14 @@ class _LoginPageState extends State<LoginPage> {
                           return "CNPJ Inválido";
                       },
                     ),
-
                     TextFormField(
                       obscureText: true,
                       keyboardType: TextInputType.text,
                       style: new TextStyle(color: Colors.white, fontSize: 20),
                       decoration: InputDecoration(
                           labelText: "Senha",
-                          labelStyle: TextStyle(color: Colors.black38,
+                          labelStyle: TextStyle(
+                              color: Colors.black38,
                               fontWeight: FontWeight.w400),
                           icon: Icon(Icons.lock_outline)),
                       // ignore: missing_return
@@ -92,8 +93,11 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () => {
                           //if (_FormKey.currentState.validate()) {}
                           //model.signIn();
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => HomePage()))
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => MyHomePage()),
+                        ModalRoute.withName("/MyHomePage")
+                          )
                         },
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0)),

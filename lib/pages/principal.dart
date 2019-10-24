@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gif/api/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
-import 'detalhes.dart';
+import 'clientelist.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -18,95 +16,139 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController _textController = TextEditingController();
+
+  TextEditingController _searchQuery;
+  bool _isSearching = false;
   Map data;
   List userData;
+  List filter;
 
   Future getData() async {
     http.Response response =
-    await http.get("http://192.168.6.30:8086/api/5/ClienteSAP");
+        await http.get("http://192.168.6.30:8086/api/5/ClienteSAP");
     data = json.decode(response.body);
     setState(() {
       userData = data["extra"];
+      filter = data["extra"];
     });
+  }
+
+  void _startSearch() {
+    ModalRoute.of(context)
+        .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
+
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearching = false;
+      filter.clear();
+      filter.addAll(userData);
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchQuery.clear();
+      filter.clear();
+      filter.addAll(userData);
+
+    });
+  }
+
+  List<Widget> _buildActions() {
+    if (_isSearching) {
+      return <Widget>[
+        new IconButton(
+          icon: const Icon(
+            Icons.clear,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            if (_searchQuery == null || _searchQuery.text.isEmpty) {
+              Navigator.pop(context);
+              return;
+            }
+            _clearSearchQuery();
+          },
+        ),
+      ];
+    }
+    return <Widget>[
+      new IconButton(
+        icon: const Icon(
+          Icons.search,
+          color: Colors.white,
+        ),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  Widget _buildSearchField() {
+    return new TextField(
+      controller: _searchQuery,
+      autofocus: true,
+      decoration: const InputDecoration(
+        hintText: 'Pesquisar...',
+        border: InputBorder.none,
+        hintStyle: const TextStyle(color: Colors.white30),
+      ),
+      style: const TextStyle(color: Colors.white, fontSize: 16.0),
+      onChanged: updateSearchQuery,
+    );
+  }
+
+  void updateSearchQuery(String newQuery) {
+    if (newQuery != null) {
+      filter = userData
+          .where((i) => (i["cardName"].toString().contains(newQuery)
+          ||
+          i["cardCode"].toString().contains(newQuery)
+      ))
+          .toList();
+    }
+
+    if (newQuery.isEmpty) {
+      filter.clear();
+      filter.addAll(userData);
+    }
+
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
+    _searchQuery = new TextEditingController();
     getData();
   }
-
-  Icon cusIcon = Icon(Icons.search);
-  Widget cusSearchBar = Text('Clientes');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              setState(() {
-                if (this.cusIcon.icon == Icons.search) {
-                  this.cusIcon = Icon(Icons.cancel);
-                  this.cusSearchBar = TextField(
-                    textInputAction: TextInputAction.go,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Procurar",
-                    ),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-
-                  );
-                }
-                else {
-                  this.cusIcon = Icon(Icons.search);
-                  this.cusSearchBar = Text('Clientes');
-                }
-              });
-            },
-            icon: cusIcon,
-          )
-        ],
-
-        title: cusSearchBar,
-        backgroundColor: Colors.blue,
+      appBar: new AppBar(
+        leading: _isSearching
+            ? new BackButton(
+                color: Colors.white,
+              )
+            : null,
+        title: _isSearching ? _buildSearchField() : Text('Clientes'),
+        actions: _buildActions(),
       ),
-      body: ListView.builder(
-        itemCount: userData == null ? 0 : userData.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "${userData[index]["cardCode"]} ",
-                        // ${userData[index]["last_name"]}
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    )
-                  ],
+      body: filter != null && filter.length > 0
+          ? new ClienteList(filter)
+          : userData == null
+              ? new Center(child: new CircularProgressIndicator())
+              : new Center(
+                  child: new Text("Nenhum dado encontrado"),
                 ),
-              ),
-            ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailPage(userData[index])));
-            },
-          );
-        },
-
-      ),
     );
   }
 }
