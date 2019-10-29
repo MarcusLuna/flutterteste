@@ -37,12 +37,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             new ListTile(
               title: new Text('Clientes'),
+              trailing: Icon(
+                Icons.person,
+                color: Colors.green,
+              ),
               onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (context) => HomePage()),
-                    ModalRoute.withName("/HomePage")
-                );
+                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (BuildContext context) => new HomePage()));
               },
             ),
             new Divider(
